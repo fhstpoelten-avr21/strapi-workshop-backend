@@ -677,6 +677,193 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiArticleArticle extends Schema.CollectionType {
+  collectionName: 'articles';
+  info: {
+    singularName: 'article';
+    pluralName: 'articles';
+    displayName: 'article';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    intro: Attribute.Text;
+    slug: Attribute.UID<'api::article.article', 'title'>;
+    body: Attribute.Blocks;
+    cover: Attribute.Media;
+    categories: Attribute.Relation<
+      'api::article.article',
+      'manyToMany',
+      'api::category.category'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::article.article',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::article.article',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'Category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    articles: Attribute.Relation<
+      'api::category.category',
+      'manyToMany',
+      'api::article.article'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProjectProject extends Schema.CollectionType {
+  collectionName: 'projects';
+  info: {
+    singularName: 'project';
+    pluralName: 'projects';
+    displayName: 'Project';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    slug: Attribute.UID<'api::project.project', 'title'>;
+    intro: Attribute.RichText;
+    body: Attribute.RichText;
+    cover: Attribute.Media;
+    images: Attribute.Media;
+    project_categories: Attribute.Relation<
+      'api::project.project',
+      'manyToMany',
+      'api::project-category.project-category'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::project.project',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::project.project',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProjectCategoryProjectCategory
+  extends Schema.CollectionType {
+  collectionName: 'project_categories';
+  info: {
+    singularName: 'project-category';
+    pluralName: 'project-categories';
+    displayName: 'Project Category';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    description: Attribute.Text;
+    cover: Attribute.Media;
+    projects: Attribute.Relation<
+      'api::project-category.project-category',
+      'manyToMany',
+      'api::project.project'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::project-category.project-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::project-category.project-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiVisitorMessageVisitorMessage extends Schema.CollectionType {
+  collectionName: 'visitor_messages';
+  info: {
+    singularName: 'visitor-message';
+    pluralName: 'visitor-messages';
+    displayName: 'Visitor Message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    body: Attribute.RichText;
+    project_categories: Attribute.JSON;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::visitor-message.visitor-message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::visitor-message.visitor-message',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -693,6 +880,11 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::article.article': ApiArticleArticle;
+      'api::category.category': ApiCategoryCategory;
+      'api::project.project': ApiProjectProject;
+      'api::project-category.project-category': ApiProjectCategoryProjectCategory;
+      'api::visitor-message.visitor-message': ApiVisitorMessageVisitorMessage;
     }
   }
 }
